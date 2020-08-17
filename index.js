@@ -1,27 +1,20 @@
-const { MongoClient } = require("mongodb");
+//Environment
 const { uri } = require("./env");
+//Libraries
+const { MongoClient } = require("mongodb");
+const express = require("express");
+const app = express();
+const mongoose = require("mongoose");
+//Routes
+const authRoute = require("./routes/auth");
+// **********************************************************
+//connect
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
+  console.log("Connected to MongoDB")
+);
+//Middleware
+app.use(express.json());
+//Routes
+app.use("/api/user", authRoute);
 
-// Create a new MongoClient
-const client = new MongoClient(uri, { useUnifiedTopology: true });
-
-async function run() {
-  try {
-    // Connect the client to the server
-    await client.connect();
-    const db = client.db("AppNode");
-
-    console.log("Connected successfully to server");
-
-    let doc = {
-      name: "kamil",
-      email: "test@test.pl",
-      password: "passwd",
-      subscriptionTill: "2020-08-19T22:00:00.000+00:00",
-    };
-    db.collection("TestCollection").insertOne(doc);
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-run();
+app.listen(3000, () => console.log("running at 3000"));
