@@ -1,24 +1,61 @@
+//Environment
+const { tokenKey } = require("../env");
 //Models
 const User = require("../model/User");
-const { restart } = require("nodemon");
-
+//Validation
+const {
+  registerValidation,
+  loginValidation,
+} = require("../validation/UserValidation");
+//Libraries
 const router = require("express").Router();
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
-//validation
-const Joi = require("joi");
 router.post("/register", async (req, res) => {
+  const { error } = registerValidation(req.body);
+  if (error) {
+    return res.status(400).send(error.message);
+  }
+
+  const doesExist = await User.findOne({ email: req.body.email });
+  if (doesExist) return res.status(400).send("You cant register");
+
+  const salt = await bcrypt.genSalt(13);
+  const hashPass = await bcrypt.hash(req.body.password, salt);
+
   const user = new User({
     name: req.body.name,
     email: req.body.email,
-    password: req.body.password,
+    password: hashPass,
   });
 
   try {
-    const savedUser = await user.save();
-    res.send(savedUser);
+    await user.save();
+    res.send("Succesful register");
   } catch (err) {
-    restart.status(400).send(err);
+    res.status(400).send(err);
   }
+});
+
+router.post("/login", async (req, res) => {
+  const { error } = loginValidation(req.body);
+  if (error) return res.status(400).send(error.message);
+
+  const user = await User.findOne({ email: req.body.email });
+  if (!user) {
+    return res.status(400).send("Something wrong with email or pass");
+  }
+
+  const validPass = await bcrypt.compare(req.body.password, user.password);
+  if (!validPass) {
+    return res.status(400).send("Something wrong with email or pass");
+  }
+  const token = jwt.sign(
+    { _id: user.id, username: user.name, subscription: user.date },
+    tokenKey
+  );
+  res.header("auth-token", token).send(token);
 });
 
 module.exports = router;

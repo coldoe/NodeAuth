@@ -7,6 +7,8 @@ const app = express();
 const mongoose = require("mongoose");
 //Routes
 const authRoute = require("./routes/auth");
+//My js files
+const postRoute = require("./routes/post");
 // **********************************************************
 //connect
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
@@ -16,5 +18,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
 app.use(express.json());
 //Routes
 app.use("/api/user", authRoute);
+//testing routes
+app.use("/api", postRoute);
 
 app.listen(3000, () => console.log("running at 3000"));
