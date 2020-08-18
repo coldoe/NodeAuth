@@ -47,9 +47,8 @@ router.post("/login", async (req, res) => {
     return res.status(400).send("Something wrong with email or pass");
   }
 
-  let sub = new Date(user.date).toDateString();
-
-  let today = new Date().toDateString();
+  let sub = new Date(user.date);
+  let today = new Date();
 
   if (sub < today) {
     return res
