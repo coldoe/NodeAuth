@@ -20,7 +20,11 @@ const userSchema = mongoose.Schema({
   },
   date: {
     type: Date,
-    default: Date.now,
+    default: +new Date() + 30 * 24 * 60 * 60 * 1000,
+  },
+  role: {
+    type: String,
+    default: "student",
   },
 });
 

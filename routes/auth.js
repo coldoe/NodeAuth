@@ -47,12 +47,27 @@ router.post("/login", async (req, res) => {
     return res.status(400).send("Something wrong with email or pass");
   }
 
+  let sub = new Date(user.date).toDateString();
+
+  let today = new Date().toDateString();
+
+  if (sub < today) {
+    return res
+      .status(403)
+      .send("Your subscription is not valid anymore, Forbidden");
+  }
+
   const validPass = await bcrypt.compare(req.body.password, user.password);
   if (!validPass) {
     return res.status(400).send("Something wrong with email or pass");
   }
   const token = jwt.sign(
-    { _id: user.id, username: user.name, subscription: user.date },
+    {
+      _id: user.id,
+      username: user.name,
+      subscription: user.date,
+      role: user.role,
+    },
     tokenKey
   );
   res.header("auth-token", token).send(token);
