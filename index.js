@@ -1,14 +1,12 @@
 //Environment
-// const { uri } = require("./env");
-//Libraries
-// require("dotenv").config();
 require("dotenv").config({ path: __dirname + "/.env" });
-// const { MongoClient } = require("mongodb");
+//Libraries
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 //Routes
 const authRoute = require("./routes/auth");
+const adminPanelRoute = require("./routes/adminPanel");
 //My js files
 const postRoute = require("./routes/post");
 // **********************************************************
@@ -20,9 +18,14 @@ mongoose.connect(
 );
 //Middleware
 app.use(express.json());
-//Routes
+// app.use(ex);
+//Routes for users
 app.use("/api/user", authRoute);
+
+//Route for admin
+app.use("/api", adminPanelRoute);
 //testing routes
+// /api/adminPanel
 app.use("/api", postRoute);
 
 app.listen(3000, () => console.log("running at 3000"));

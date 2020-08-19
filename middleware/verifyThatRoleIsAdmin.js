@@ -16,7 +16,6 @@ module.exports = function (req, res, next) {
     // const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
     //You can seek for token under user
     // req.user = verified;
-    res.status(200).send("Welcome Sir");
     next();
   } catch (error) {
     res.status(400).send("Invalid Token, sry");
