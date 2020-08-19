@@ -1,7 +1,9 @@
 //Environment
-const { uri } = require("./env");
+// const { uri } = require("./env");
 //Libraries
-const { MongoClient } = require("mongodb");
+// require("dotenv").config();
+require("dotenv").config({ path: __dirname + "/.env" });
+// const { MongoClient } = require("mongodb");
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -11,8 +13,10 @@ const authRoute = require("./routes/auth");
 const postRoute = require("./routes/post");
 // **********************************************************
 //connect
-mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true }, () =>
-  console.log("Connected to MongoDB")
+mongoose.connect(
+  process.env.URI_MONGO,
+  { useNewUrlParser: true, useUnifiedTopology: true },
+  () => console.log("Connected to MongoDB")
 );
 //Middleware
 app.use(express.json());

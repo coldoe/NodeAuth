@@ -10,7 +10,7 @@ module.exports = function (req, res, next) {
   }
   try {
     //what if wrong token ?
-    const verified = jwt.verify(token, tokenKey);
+    const verified = jwt.verify(token, process.env.JWT_SECRET_KEY);
     //You can seek for token under user
     req.user = verified;
     next();

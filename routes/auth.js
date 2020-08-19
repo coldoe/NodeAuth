@@ -1,5 +1,5 @@
 //Environment
-const { tokenKey } = require("../env");
+// const { tokenKey } = require("../env");
 //Models
 const User = require("../model/User");
 //Validation
@@ -67,7 +67,7 @@ router.post("/login", async (req, res) => {
       subscription: user.date,
       role: user.role,
     },
-    tokenKey
+    process.env.JWT_SECRET_KEY
   );
   res.header("auth-token", token).send(token);
 });
