@@ -1,5 +1,3 @@
-//Environment
-// const { tokenKey } = require("../env");
 //Models
 const User = require("../model/User");
 //Validation
@@ -11,7 +9,7 @@ const {
 const router = require("express").Router();
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+//Building API
 router.post("/register", async (req, res) => {
   const { error } = registerValidation(req.body);
   if (error) {

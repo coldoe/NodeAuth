@@ -1,5 +1,3 @@
-//Environment
-const { tokenKey } = require("../env");
 //Libraries
 const jwt = require("jsonwebtoken");
 
