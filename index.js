@@ -18,6 +18,14 @@ mongoose.connect(
 );
 //Middleware
 app.use(express.json());
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 // app.use(ex);
 //Routes for users
 app.use("/api/user", authRoute);
@@ -28,4 +36,5 @@ app.use("/api", adminPanelRoute);
 // /api/adminPanel
 app.use("/api", postRoute);
 
-app.listen(3000, () => console.log("running at 3000"));
+let port = process.env.Port || 4000;
+app.listen(port, () => console.log(`Im running on port: ${port}`));
