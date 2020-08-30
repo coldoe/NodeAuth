@@ -17,7 +17,7 @@ router.post("/register", async (req, res) => {
   }
 
   const doesExist = await User.findOne({ email: req.body.email });
-  if (doesExist) return res.status(400).send("You cant register");
+  if (doesExist) return res.status(400).json("You cant register");
 
   const salt = await bcrypt.genSalt(13);
   const hashPass = await bcrypt.hash(req.body.password, salt);
@@ -30,19 +30,19 @@ router.post("/register", async (req, res) => {
 
   try {
     await user.save();
-    res.send("Succesful register");
+    res.json("Succesful register");
   } catch (err) {
-    res.status(400).send(err);
+    res.status(400).json(err);
   }
 });
 
 router.post("/login", async (req, res) => {
   const { error } = loginValidation(req.body);
-  if (error) return res.status(400).send(error.message);
+  if (error) return res.status(400).json(error.message);
 
   const user = await User.findOne({ email: req.body.email });
   if (!user) {
-    return res.status(400).send("Something wrong with email or pass");
+    return res.status(400).json("Something wrong with email or pass");
   }
 
   let sub = new Date(user.date);
@@ -51,12 +51,12 @@ router.post("/login", async (req, res) => {
   if (sub < today) {
     return res
       .status(403)
-      .send("Your subscription is not valid anymore, Forbidden");
+      .json("Your subscription is not valid anymore, Forbidden");
   }
 
   const validPass = await bcrypt.compare(req.body.password, user.password);
   if (!validPass) {
-    return res.status(400).send("Something wrong with email or pass");
+    return res.status(400).json("Something wrong with email or pass");
   }
   const token = jwt.sign(
     {
